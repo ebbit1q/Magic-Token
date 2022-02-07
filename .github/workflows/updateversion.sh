@@ -15,6 +15,9 @@ elif git diff --quiet origin/master tokens.xml; then
   exit 0
 fi
 
+# reset all changes to version.txt
+git checkout origin/master version.txt
+
 # get date
 olddate="$(cat version.txt)"
 date="$(date --utc +%Y%m%d)"
