@@ -51,6 +51,6 @@ git config user.name github-actions
 git config user.email github-actions@github.com
 git add tokens.xml version.txt
 git commit -m "update version to $date"
-git push "$REPO" "HEAD:$BRANCH"
+git push "$REPO" "HEAD:$BRANCH" -f
 commit="$(git rev-parse HEAD)"
 echo "pushed commit: $REPO_PAGE/commit/$commit"
