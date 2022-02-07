@@ -1,7 +1,6 @@
 name: Update version on pr approval
 
 on:
-  pull_request:
   pull_request_review:
     types: [submitted]
 
