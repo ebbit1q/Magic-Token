@@ -38,7 +38,7 @@ if [[ $olddate =~ $date ]]; then
     alphabet="abcdefghijklmnopqrstuvwxyz"
     for (( i=0; i<25; i++ )); do
       if [[ $suffix == "${alphabet:$i:1}" ]]; then
-        suffix="${alphabet:$i+1:1}"
+        date="$date${alphabet:$i+1:1}"
         break
       fi
     done
