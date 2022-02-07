@@ -3,6 +3,8 @@
 # checks for and updates the version in tokens.xml when a pull request gets
 # approved
 set -e
+git config user.name github-actions
+git config user.email github-actions@github.com
 
 # check if update needed
 git fetch origin master
@@ -53,8 +55,6 @@ echo "$date" >version.txt
 # push changes
 git fetch "$REPO" "$BRANCH"
 git checkout -b pull_request
-git config user.name github-actions
-git config user.email github-actions@github.com
 git add tokens.xml version.txt
 git commit -m "update version to $date"
 git push "$REPO" "HEAD:$BRANCH"
