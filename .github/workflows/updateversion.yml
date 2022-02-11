@@ -29,27 +29,29 @@ jobs:
         id: configure
         env:
           EVENT: ${{github.event_name}}
-          REPO: ${{github.repository}}
-          PR_NO: ${{github.event.issue.number}}
+          NUMBER: ${{github.event.issue.number}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          SHA: ${{github.event.pull_request.head.sha}}
+          REF: ${{github.event.pull_request.head.ref}}
           REPO_URL: ${{github.event.pull_request.head.repo.clone_url}}
           REPO_PAGE: ${{github.event.pull_request.head.repo.svn_url}}
-          REF: ${{github.event.pull_request.head.ref}}
-          SHA: ${{github.event.pull_request.head.sha}}
         run: |
           if [[ $EVENT == "issue_comment" ]]; then
             tmp="$(mktemp)"
-            gh pr view "$PR_NO" --repo "$REPO" --json >"$tmp"
-            <$tmp
-            SHA="$(jq ".head.repo.sha" "$tmp")"
+            api="$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$NUMBER"
+            echo "fetching $api"
+            gh api "$api" >"$tmp"
+            echo "received:"
+            jq "." "$tmp"
+            SHA="$(jq ".head.sha" "$tmp")"
+            REF="$(jq ".head.ref" "$tmp")"
             REPO_URL="$(jq ".head.repo.clone_url" "$tmp")"
             REPO_PAGE="$(jq ".head.repo.svn_url" "$tmp")"
-            REF="$(jq ".head.repo.ref" "$tmp")"
           fi
           echo "::set-output name=sha::$SHA"
+          echo "::set-output name=ref::$REF"
           echo "::set-output name=url::$REPO_URL"
           echo "::set-output name=page::$REPO_PAGE"
-          echo "::set-output name=ref::$REF"
 
       - name: Checkout pull request
         uses: actions/checkout@v2
@@ -57,10 +59,94 @@ jobs:
           fetch-depth: 0
           ref: ${{steps.configure.outputs.sha}}
 
+      - name: Check for changes
+        id: check
+        shell: bash
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git fetch origin master
+          if ! git merge origin/master; then
+            echo "failed to merge with master" >&2
+            exit 2
+          elif git diff --quiet origin/master tokens.xml; then
+            echo "there are no changes to tokens.xml"
+            echo "::notice::no commit created"
+            echo "::set-output name=update::false"
+          else
+            echo "::set-output name=update::true"
+          fi
+
+      - name: Get date
+        if: steps.check.outputs.update == 'true'
+        id: date
+        shell: bash
+        run: |
+          git checkout origin/master version.txt
+          previous="$(<version.txt)"
+          date="$(date --utc +%Y%m%d)"
+          echo "it is currently $date"
+          echo "::set-output name=date::$date"
+          echo "::set-output name=previous::$previous"
+
+      - name: Check for suffix used when multiple changes happen in a day
+        if: steps.check.outputs.update == 'true'
+        id: version
+        shell: python
+        env:
+          SUFFIXRX: '[a-z]+'
+          DATE: steps.date.outputs.date
+          PREVIOUS: steps.date.outputs.previous
+        run: |
+          import re
+          version = DATE
+          if re.search(DATE, PREVIOUS) is not None:
+            match = re.search(SUFFIXRX, PREVIOUS)
+            if match is None:
+              suffix = "a" # the first a is actually hidden
+            else:
+              suffix = match[0]
+            max = chr(ord("z") + 1)
+            charlist = []
+            add = 1
+            for char in reversed(suffix):
+              nextchar = chr(ord(char) + add)
+              add = nextchar == max
+              if add:
+                charlist.append("a")
+              else:
+                charlist.append(nextchar)
+            if add:
+              charlist.append("a")
+            version += "".join(reversed(charlist))
+          print(f"::set-output name=version::{version}")
+
       - name: Update date
+        if: steps.check.outputs.update == 'true'
         shell: bash
         env:
+          VERSION: steps.version.outputs.version
+          PREVIOUS: steps.date.outputs.previous
+        run: |
+          # edit files
+          echo "updating version from $PREVIOUS to $VERSION"
+          tag="sourceVersion"
+          sed -i "s?<$tag>.*</$tag>?<$tag>$VERSION</$tag>?" tokens.xml
+          echo "$VERSION" >version.txt
+
+      - name: Push changes
+        if: steps.check.outputs.update == 'true'
+        shell: bash
+        env:
+          REF: ${{steps.configure.outputs.ref}}
           REPO_URL: ${{steps.configure.outputs.url}}
           REPO_PAGE: ${{steps.configure.outputs.page}}
-          REF: ${{steps.configure.outputs.ref}}
-        run: .github/workflows/updateversion.sh
+          VERSION: steps.version.outputs.version
+        run: |
+          git fetch "$REPO_URL" "$REF"
+          git checkout -b pull_request
+          git add tokens.xml version.txt
+          git commit -m "update version to $VERSION"
+          git push "$REPO_URL" "HEAD:$REF"
+          commit="$(git rev-parse HEAD)"
+          echo "::notice::pushed commit: $REPO_PAGE/commit/$commit"
