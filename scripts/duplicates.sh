@@ -1,7 +1,12 @@
 #!/bin/bash
-while IFS= read -r line; do
-  if [[ $line == "$last" ]]; then
-    echo "$line"
+e=0
+declare -i i=0
+while read -r; do
+  if [[ $REPLY == "$last" ]]; then
+    e=1
+    echo "duplicate line at $i: $REPLY"
   fi
-  last="$line"
+  last=$REPLY
+  i+=1
 done <tokens.xml
+exit $e

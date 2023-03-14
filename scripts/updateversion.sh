@@ -39,3 +39,4 @@ fi
 echo "updating version from $olddate to $date"
 sed -i "s?<sourceVersion>.*</sourceVersion>?<sourceVersion>$date</sourceVersion>?" tokens.xml
 echo "$date" >version.txt
+git commit tokens.xml version.txt -m "update version"
