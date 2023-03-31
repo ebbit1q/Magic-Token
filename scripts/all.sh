@@ -22,6 +22,8 @@ echo "$source_dir/missing.sh"
 "$source_dir/missing.sh" || :  # allow failure
 echo "$source_dir/namecheck.sh"
 "$source_dir/namecheck.sh"
+echo "$source_dir/takenname.sh"
+"$source_dir/takenname.sh"
 
 # test in cockatrice
 echo "$source_dir/install.sh"
