@@ -27,6 +27,7 @@ done
 # create commit message
 message="$TITLE (#$NUMBER)
 
+closes #$NUMBER
 $(git log FETCH_HEAD..HEAD --reverse --format="* %B%n")"
 if [[ $coauthors ]]; then
   message+="
