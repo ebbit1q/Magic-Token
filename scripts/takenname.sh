@@ -1,5 +1,5 @@
 #!/bin/bash
-# makes sure all cards in the tokens.xml are present in the cards.xml
+# checks if cards in the tokens.xml aren't taken
 namerx='<name>([^<]*)</name>'
 cards="$HOME/.local/share/Cockatrice/Cockatrice/cards.xml"
 

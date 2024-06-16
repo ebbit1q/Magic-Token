@@ -4,9 +4,9 @@
 # approved
 set -e
 
-# reset all changes to version.txt
+# merge before update
 git fetch origin
-git checkout origin/master version.txt
+git merge origin/master || exit 2
 
 # get date
 olddate="$(cat version.txt)"
