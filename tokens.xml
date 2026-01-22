@@ -1776,6 +1776,7 @@ Whenever this creature attacks, target attacking creature gains flying until end
             </prop>
             <set picURL="https://cdn.staticneo.com/w/mtg/b/b8/Camarid.jpg">FEM</set>
             <reverse-related count="x">Homarid Spawning Bed</reverse-related>
+            <reverse-related>Sarpadian Empires, Vol. VII</reverse-related>
             <token>1</token>
             <tablerow>2</tablerow>
         </card>
@@ -2158,6 +2159,7 @@ Whenever this creature attacks, target attacking creature gains flying until end
             <set picURL="https://cards.scryfall.io/large/front/1/6/165164e7-5693-4d65-b789-8ed8a222365b.jpg?1547509191" uuid="165164e7-5693-4d65-b789-8ed8a222365b">UMA</set>
             <reverse-related count="2">Icatian Crier</reverse-related>
             <reverse-related count="4">Icatian Town</reverse-related>
+            <reverse-related>Sarpadian Empires, Vol. VII</reverse-related>
             <token>1</token>
             <tablerow>2</tablerow>
         </card>
@@ -5739,6 +5741,7 @@ At the beginning of your upkeep, this creature deals 1 damage to you.</text>
             <reverse-related count="2">Pashalik Mons</reverse-related>
             <reverse-related count="3">Ponyback Brigade</reverse-related>
             <reverse-related>Rulik Mons, Warren Chief</reverse-related>
+            <reverse-related>Sarpadian Empires, Vol. VII</reverse-related>
             <reverse-related>Searslicer Goblin</reverse-related>
             <reverse-related count="3">Siege-Gang Commander</reverse-related>
             <reverse-related count="2">Siege-Gang Lieutenant</reverse-related>
@@ -11079,6 +11082,7 @@ Equip {1}</text>
             <reverse-related count="2">Saproling Migration</reverse-related>
             <reverse-related count="4" exclude="exclude">Saproling Migration</reverse-related>
             <reverse-related count="x">Saproling Symbiosis</reverse-related>
+            <reverse-related>Sarpadian Empires, Vol. VII</reverse-related>
             <reverse-related>Saurian Symbiote</reverse-related>
             <reverse-related>Savage Thallid</reverse-related>
             <reverse-related count="3">Scatter the Seeds</reverse-related>
@@ -13662,6 +13666,7 @@ This creature can't be enchanted.</text>
             <set picURL="https://cards.scryfall.io/large/front/d/c/dc5604c5-4fff-4bb6-bf6d-69027e4eeb21.jpg?1689975917" uuid="dc5604c5-4fff-4bb6-bf6d-69027e4eeb21">CMM</set>
             <set picURL="https://cards.scryfall.io/large/front/5/b/5b9f471a-1822-4981-95a9-8923d83ddcbf.jpg?1562702075" uuid="5b9f471a-1822-4981-95a9-8923d83ddcbf">MM2</set>
             <reverse-related count="x">Endrek Sahr, Master Breeder</reverse-related>
+            <reverse-related>Sarpadian Empires, Vol. VII</reverse-related>
             <token>1</token>
             <tablerow>2</tablerow>
         </card>
